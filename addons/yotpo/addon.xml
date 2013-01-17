@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+ 
+<addon scheme='2.0'>
+  <id>yotpo</id>
+  <version>1.0</version> 
+  <name>Yotpo</name>
+  <description>Yotpo descritpion</description>
+  <priority>100500</priority>
+
+  <language_variables>
+	<item lang="EN" id="block_widget">Yotpo widget</item>
+	<item lang="EN" id="block_widget_description">Add Yotpo widget</item>
+  </language_variables>
+</addon>
