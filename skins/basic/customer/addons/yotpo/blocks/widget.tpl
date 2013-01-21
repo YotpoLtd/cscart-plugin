@@ -9,5 +9,6 @@
        data-url="{$yotpoProductUrl}" 
        data-image-url="{$yotpoProductImageUrl}" 
   	   data-description="{$product.full_description|unescape|strip_tags|escape:"html"}" 
-  	   data-bread-crumbs="{$yotpoBreadCrumbs}"> 
+  	   data-bread-crumbs="{$yotpoBreadCrumbs}"
+       data-lang="{$yotpoLanguage}"> 
   </div>

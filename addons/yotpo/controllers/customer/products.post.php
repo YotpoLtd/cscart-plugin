@@ -21,6 +21,7 @@ if ($mode == 'view' && !empty($_REQUEST['product_id']) && Registry::is_exist('ad
 	$view->assign('yotpoAppkey', Registry::get('addons.yotpo.yotpo_app_key'));
 	$view->assign('yotpoProductImageUrl', fn_get_product_image_url($product['product_id']));
 	$view->assign('yotpoProductUrl', fn_get_product_url($product['product_id']));
+	$view->assign('yotpoLanguage', CART_LANGUAGE);
 	// fn_logConsole("yotpoImageUrl111",$aaa,false);
 	// fn_logConsole("somethins33",json_encode($product) ,false);
 	// fn_logConsole("config",json_encode($config) ,false);
