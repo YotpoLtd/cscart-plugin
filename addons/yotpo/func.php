@@ -48,47 +48,43 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
 
     $data = array();
     $data['utoken'] = $token;
-    $customer = NULL;
-    file_put_contents("testFile.txt", "order_info == \n".json_encode($order_info), FILE_APPEND);
-//     //     $order = new Order((int)$params['id_order']);
-//     //     $customer = new Customer((int)$order->id_customer);
-//     //   $data["order_date"] = $order->date_add;
-      $data["email"] = $order_info['$email'];
-      $data["customer_name"] = $order_info['firstname'] . ' ' . $order_info['lastname'];
-      $data["order_id"] = $order_info['order_id'];
+    $data["email"] = $order_info['email'];
+    $data["customer_name"] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+    $data["order_id"] = $order_info['order_id'];
+
+    $data['platform'] = 'prestashop';
+
+    $products = $order_info['items'];
+    $products_arr = array();
+
+    $currencies = Registry::get('currencies');
+    $currency_symbol = $currencies[CART_SECONDARY_CURRENCY]['currency_code'];
 
 
+    $currency = $currencies[CART_SECONDARY_CURRENCY];
 
-      $data['platform'] = 'prestashop';
-      file_put_contents("testFile.txt", "data == \n".json_encode($data), FILE_APPEND);
+    $data["currency_iso"] = $currency_symbol;
+    foreach ($products as $product) 
+    {
+      $product_data = array();
+      $product_data['url'] = fn_get_product_url($product['product_id']);
+      $product_data['name'] = fn_get_product_name($product['product_id'],CART_LANGUAGE,false);
+      $product_data['description'] =  db_get_field("SELECT full_description FROM ?:product_descriptions WHERE product_id = ?i AND lang_code = ?s", $product['product_id'], CART_LANGUAGE);
+      if(isset($product_data['description']))
+      {
+        $product_data['description'] = strip_tags(html_entity_decode($product_data['description'], ENT_NOQUOTES, 'UTF-8'));
+      }
+      $product_data['image'] = fn_get_product_image_url($product['product_id']);
+      
+      // $product_data['price'] = $product['base_price'];
+      $product_data['price'] = fn_format_rate_value($product['base_price'], 'F', $currency['decimals'], $currency['decimals_separator'], $currency['thousands_separator'], $currency['coefficient']);
 
+      $products_arr[$product['product_id']] = $product_data;
+    }
 
-      $products = $order_info['items'];
-      $products_arr = array();
-
-//     //     $currency = $context->getCurrency($params['id_order']);
-//     //   $data["currency_iso"] = $currency['iso_code'];
-
-      foreach ($products as $product) {
-
-        $product_data = array();
-
-    //     $full_product = new Product((int)($product['product_id']), false, (int)($params['cookie']->id_lang));      
-    //     $product_data['url'] = $full_product->getLink();  
-    //     $product_data['name'] = $full_product->name;
-    //     $product_data['image'] = $context->_getProductImageUrl($product['product_id']);
-    //     $product_data['description'] = strip_tags($full_product->description);
-
-    //     if (isset($product['total_price_tax_excl']))
-    //     $product_data['price'] = $product['total_price_tax_excl'];
-    //     else
-    //   $product_data['price'] = $product['product_price'];
-
-    //     $products_arr[$product['product_id']] = $product_data;
-    //   }
-
-    //   $data['products'] = $products_arr;
-    //   $this->makePostRequest(self::YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", $data);
+    $data['products'] = $products_arr;
+    fn_declare_consts();
+    fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
   }
 }
 
@@ -132,9 +128,20 @@ function fn_grant_oauth_access($app_key, $secret_token)
   }
   catch(OAuthException2 $e)
   {//Do nothing
-    file_put_contents("testFile.txt", json_encode($e), FILE_APPEND);
     return NULL;
   }
+}
+
+function fn_get_product_image_url($product_id)
+{
+  $image_pair = fn_get_image_pairs($product_id, 'product', 'M', true, true, CART_LANGUAGE);
+  $valid_image_path = fn_find_valid_image_path($image_pair, 'product');
+  return !empty($valid_image_path) ? 'http://' . Registry::get('config.http_host') . $valid_image_path : 'http://' . Registry::get('config.http_location') . '/images/no_image.gif';
+}
+
+function fn_get_product_url($product_id)
+{
+  return fn_url('index.php?dispatch=products.view&product_id=' . $product_id, 'C', 'http', '&', CART_LANGUAGE, '', true);
 }
 
 /**
