@@ -3,7 +3,7 @@
 <div id="yotpo_block_left" class="block">
 
   <div class="yotpo reviews" 
-  	   data-appkey="BWQo8d9IrWIOhGQ0eEihI1ysGkKkXaRjQAU0jlUX"
+  	   data-appkey="{$yotpoAppkey}"
   	   data-domain="{$config.current_location}"
   	   data-product-id="{$product.product_id}"
   	   data-product-models="1" 

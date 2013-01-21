@@ -6,9 +6,36 @@
   <name>Yotpo</name>
   <description>Yotpo descritpion</description>
   <priority>100500</priority>
-
+  <default_language>EN</default_language>
   <language_variables>
 	<item lang="EN" id="block_widget">Yotpo widget</item>
 	<item lang="EN" id="block_widget_description">Add Yotpo widget</item>
   </language_variables>
+
+  	<settings>
+	<sections>
+		<section id="general">
+			<name>General</name>
+			<items>
+				<item id="yotpo_app_key">
+					<name>App key</name>
+					<type>input</type>
+					<variants/>
+				</item>
+
+				<item id="yotpo_secret_token">
+					<name>Secret token</name>
+					<type>input</type>
+					<variants/>
+				</item>
+
+				<item id="yotpo_mail_after_purchase">
+					<name>Mail after purchase</name>
+					<type>checkbox</type>
+					<default_value>Y</default_value>
+				</item>
+			</items>
+		</section>
+	</sections>
+	</settings>
 </addon>
