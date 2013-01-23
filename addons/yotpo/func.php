@@ -22,17 +22,15 @@ function fn_get_widget_data()
 
 function fn_yotpo_change_order_status($status_to, $status_from, $order_info, $force_notification, $order_statuses)
 {
-
-  $curl = fn_check_curl();
-
   if (
+      $status_to == "C" &&
       Registry::is_exist('addons.yotpo.yotpo_mail_after_purchase') && 
       Registry::get('addons.yotpo.yotpo_mail_after_purchase') == true && 
       Registry::is_exist('addons.yotpo.yotpo_app_key') && 
       Registry::get('addons.yotpo.yotpo_app_key') != '' && 
       Registry::is_exist('addons.yotpo.yotpo_secret_token') && 
       Registry::get('addons.yotpo.yotpo_secret_token') != '' && 
-      $curl
+      fn_check_curl()
       ) 
   {
     fn_yotpo_make_map_request(Registry::get('addons.yotpo.yotpo_app_key'), Registry::get('addons.yotpo.yotpo_secret_token'), $order_info);
@@ -47,6 +45,7 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
   {
 
     $data = array();
+    $data["order_date"] = date('d-m-Y', $order_info['timestamp']);
     $data['utoken'] = $token;
     $data["email"] = $order_info['email'];
     $data["customer_name"] = $order_info['firstname'] . ' ' . $order_info['lastname'];
@@ -58,12 +57,9 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
     $products_arr = array();
 
     $currencies = Registry::get('currencies');
-    $currency_symbol = $currencies[CART_SECONDARY_CURRENCY]['currency_code'];
+    $currency = $currencies[$order_info['secondary_currency']];
 
-
-    $currency = $currencies[CART_SECONDARY_CURRENCY];
-
-    $data["currency_iso"] = $currency_symbol;
+    $data["currency_iso"] = $currencies[$order_info['secondary_currency']]['currency_code'];
     foreach ($products as $product) 
     {
       $product_data = array();
@@ -77,7 +73,7 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
       $product_data['image'] = fn_get_product_image_url($product['product_id']);
       
       // $product_data['price'] = $product['base_price'];
-      $product_data['price'] = fn_format_rate_value($product['base_price'], 'F', $currency['decimals'], $currency['decimals_separator'], $currency['thousands_separator'], $currency['coefficient']);
+      $product_data['price'] = fn_format_rate_value($product['base_price'], 'F', '2', '.', ',', $currency['coefficient']);
 
       $products_arr[$product['product_id']] = $product_data;
     }

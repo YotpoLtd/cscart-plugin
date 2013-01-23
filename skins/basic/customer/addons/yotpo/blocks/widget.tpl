@@ -4,7 +4,7 @@
   	   data-appkey="{$yotpoAppkey}"
   	   data-domain="{$config.current_location}"
   	   data-product-id="{$product.product_id}"
-  	   data-product-models="1" 
+  	   data-product-models="{$product.product_code}"
   	   data-name="{$product.product}" 
        data-url="{$yotpoProductUrl}" 
        data-image-url="{$yotpoProductImageUrl}" 
