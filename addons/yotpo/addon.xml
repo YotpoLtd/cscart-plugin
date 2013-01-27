@@ -12,21 +12,47 @@
 	<item lang="EN" id="block_widget_description">Add Yotpo widget</item>
   </language_variables>
 
-  	<settings>
+  	<settings layout="separate">
 	<sections>
-		<section id="general">
-			<name>General</name>
+		<section id="signup">
+			<name>Signup</name>
+			<items>
+				<item id="yotpo_signup_header">
+					<name>Create your Yotpo account</name>
+					<type>header</type>
+				</item>
+				<item id="yotpo_user_email">
+					<name>Email address</name>
+					<type>input</type>
+				</item>
+
+				<item id="yotpo_user_name">
+					<name>Name</name>
+					<type>input</type>
+				</item>
+
+				<item id="yotpo_user_password">
+					<name>Password</name>
+					<type>password</type>
+				</item>
+
+				<item id="yotpo_user_confirm_password">
+					<name>Confirm password</name>
+					<type>password</type>
+				</item>
+			</items>
+		</section>
+		<section id="settings">
+			<name>Settings</name>
 			<items>
 				<item id="yotpo_app_key">
 					<name>App key</name>
 					<type>input</type>
-					<variants/>
 				</item>
 
 				<item id="yotpo_secret_token">
 					<name>Secret token</name>
 					<type>input</type>
-					<variants/>
 				</item>
 
 				<item id="yotpo_mail_after_purchase">
@@ -35,7 +61,7 @@
 					<default_value>Y</default_value>
 				</item>
 			</items>
-		</section>
+		</section> 		
 	</sections>
 	</settings>
 </addon>

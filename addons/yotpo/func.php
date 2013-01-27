@@ -72,7 +72,6 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
       }
       $product_data['image'] = fn_get_product_image_url($product['product_id']);
       
-      // $product_data['price'] = $product['base_price'];
       $product_data['price'] = fn_format_rate_value($product['base_price'], 'F', '2', '.', ',', $currency['coefficient']);
 
       $products_arr[$product['product_id']] = $product_data;
@@ -138,6 +137,98 @@ function fn_get_product_image_url($product_id)
 function fn_get_product_url($product_id)
 {
   return fn_url('index.php?dispatch=products.view&product_id=' . $product_id, 'C', 'http', '&', CART_LANGUAGE, '', true);
+}
+
+function fn_validate_sign_up_form($userName, $mail, $password, $passwordConfirm)
+{
+  if ($email === '')
+    return 'Provide valid email address';
+  if ($name === '')
+    return 'Name is missing';
+  if(strlen($password) < 6 || strlen($password) > 128)
+    return 'Password must be at least 6 characters';
+
+  if ($password != $passwordConfirm)
+    return 'Passwords are not identical';
+
+
+  return NULL;
+}
+
+function fn_yotpo_sign_up($userName, $mail, $password, $appKeyObjectId, $secretKeyObjectId)
+{
+  fn_declare_consts();
+  $is_mail_valid = json_decode(fn_check_mail_availability($mail), true);     
+     
+  if($is_mail_valid['status']['code'] == 200 && $is_mail_valid['response']['available'] == true)
+  {  
+    $response = json_decode(fn_yotpo_register($mail, $userName, $password, Registry::get('config.current_location')), true);
+    if($response['status']['code'] == 200)
+    {
+      $accountPlatformResponse = json_decode(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], Registry::get('config.current_location')), true);        
+      if($accountPlatformResponse['status']['code'] == 200)
+      {
+        CSettings::instance()->update_value_by_id($appKeyObjectId, $response['response']['app_key']);
+        CSettings::instance()->update_value_by_id($secretKeyObjectId, $response['response']['secret']);
+        return NULL;  
+      }
+      else
+        return $response['status']['message'];  
+      
+    } 
+    else
+    {        
+      return $response['status']['message'];        
+    } 
+  }
+  else
+  {
+    if($is_mail_valid['status']['code'] == 200 )
+      return 'This mail is allready taken.';
+    else
+      return 'An error accourd during registration.';
+  }  
+}
+
+function fn_check_mail_availability($email)
+{
+  $data = array();
+  $data['model'] = 'user';
+  $data['field'] = 'email';
+  $data['value'] = $email;
+  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/check_availability', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+  return $result;
+} 
+
+function fn_yotpo_register($email, $name, $password, $url)
+{
+
+  $data = array();
+  $user = array();
+  $user["email"] = $email;
+  $user["display_name"] = $name;
+  $user["password"] = $password;
+  $user['url'] = $url;
+  $data['user'] = $user;
+  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/users.json', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+  return $result;
+}
+
+function fn_yotpo_create_account_platform($app_key, $secret_token, $shop_url)
+{
+    $token = fn_grant_oauth_access($app_key, $secret_token);
+    if(isset($token))
+    {
+      $data = array();
+      $data['utoken'] = $token;
+      $platform_type = array();
+      $platform_type['platform_type_id'] = 9;
+      $platform_type['shop_domain'] = $shop_url;
+      $data['account_platform'] = $platform_type;
+      list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+      return $result;
+    }
+    return $token;
 }
 
 /**
