@@ -2,24 +2,6 @@
 
 if ( !defined('AREA') ) { die('Access denied'); }
 
-/**
- * Returns array of Live Help options from registry
- * @return type
- */
-function fn_get_widget_data()
-{
-	$array = array(
-	    "foo" => "bar",
-	    "bar" => "foo",
-	);
-	// fn_logConsole("somethins",json_encode($product) ,false);
-	
-	$array = array(
-	    "foo" => "bar",
-	);
-	return $array;
-}
-
 function fn_yotpo_change_order_status($status_to, $status_from, $order_info, $force_notification, $order_statuses)
 {
   if (
@@ -51,7 +33,7 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
     $data["customer_name"] = $order_info['firstname'] . ' ' . $order_info['lastname'];
     $data["order_id"] = $order_info['order_id'];
 
-    $data['platform'] = 'prestashop';
+    $data['platform'] = 'cscart';
 
     $products = $order_info['items'];
     $products_arr = array();
@@ -78,31 +60,12 @@ function fn_yotpo_make_map_request($app_key, $secret_token, $order_info)
     }
 
     $data['products'] = $products_arr;
-    fn_declare_consts();
-    fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+    fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
   }
-}
-
-
-function fn_declare_consts()
-{ 
-  if (!defined('YOTPO_API_URL')) {
-    define('YOTPO_API_URL', "https://api.yotpo.com");
-  }
-  if (!defined('HTTP_REQUEST_TIMEOUT')) {
-    define('HTTP_REQUEST_TIMEOUT', 30);
-  }
-  if (!defined('YOTPO_OAUTH_TOKEN_URL')) {
-    define('YOTPO_OAUTH_TOKEN_URL', "https://api.yotpo.com/oauth/token");
-  }
-  if (!defined('DS')) {
-    define('DS', '/');
-  }  
 }
 
 function fn_grant_oauth_access($app_key, $secret_token)
 {
-    fn_declare_consts();
     $OAuthStorePath = dirname(__FILE__) . DS . 'lib'. DS .'oauth-php' . DS . 'library' . DS . 'OAuthStore.php';
     $OAuthRequesterPath = dirname(__FILE__) . DS . 'lib'. DS .'oauth-php' . DS . 'library' . DS . 'OAuthRequester.php';
 
@@ -157,7 +120,6 @@ function fn_validate_sign_up_form($userName, $mail, $password, $passwordConfirm)
 
 function fn_yotpo_sign_up($userName, $mail, $password, $appKeyObjectId, $secretKeyObjectId)
 {
-  fn_declare_consts();
   $is_mail_valid = json_decode(fn_check_mail_availability($mail), true);     
      
   if($is_mail_valid['status']['code'] == 200 && $is_mail_valid['response']['available'] == true)
@@ -196,7 +158,7 @@ function fn_check_mail_availability($email)
   $data['model'] = 'user';
   $data['field'] = 'email';
   $data['value'] = $email;
-  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/check_availability', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/check_availability', $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
   return $result;
 } 
 
@@ -210,7 +172,7 @@ function fn_yotpo_register($email, $name, $password, $url)
   $user["password"] = $password;
   $user['url'] = $url;
   $data['user'] = $user;
-  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/users.json', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+  list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/users.json', $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
   return $result;
 }
 
@@ -225,62 +187,25 @@ function fn_yotpo_create_account_platform($app_key, $secret_token, $shop_url)
       $platform_type['platform_type_id'] = 9;
       $platform_type['shop_domain'] = $shop_url;
       $data['account_platform'] = $platform_type;
-      list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', $data, NULL, NULL, HTTP_REQUEST_TIMEOUT);
+      list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
       return $result;
     }
     return $token;
 }
 
-/**
-* Logs messages/variables/data to browser console from within php
-*
-* @param $name: message to be shown for optional data/vars
-* @param $data: variable (scalar/mixed) arrays/objects, etc to be logged
-* @param $jsEval: whether to apply JS eval() to arrays/objects
-*
-* @return none
-* @author Sarfraz
-*/
-function fn_logConsole($name, $data = NULL, $jsEval = FALSE)
+function fn_yotpo_login_link()
 {
-  if (! $name) return false;
-
-  $isevaled = false;
-  $type = ($data || gettype($data)) ? 'Type: ' . gettype($data) : '';
-
-  if ($jsEval && (is_array($data) || is_object($data)))
+  $appKey = Registry::get('addons.yotpo.yotpo_app_key');
+  $secret = Registry::get('addons.yotpo.yotpo_secret_token'); 
+  if(!empty($appKey) && !empty($secret) && $appKey != '' && $secret != '')
   {
-       $data = 'eval(' . preg_replace('#[\s\r\n\t\0\x0B]+#', '', json_encode($data)) . ')';
-       $isevaled = true;
+    return "<a class='y-href' href='https://api.yotpo.com/users/b2blogin?app_key=" . $appKey ."&secret=" . $secret . "'  target='_blank'>Yotpo Dashboard.</a></div>";
   }
   else
   {
-       $data = json_encode($data);
+    $signUpHref = "<a class='y-href' href='https://api.yotpo.com/users/sign_in' target='_blank'>sign up</a>";
+    $result = "<p> You have to " .$signUpHref. " first in order to be able to costumize Yotpo widget.</p>";
+    return $result;
   }
-
-  # sanitalize
-  $data = $data ? $data : '';
-  $search_array = array("#'#", '#""#', "#''#", "#\n#", "#\r\n#");
-  $replace_array = array('"', '', '', '\\n', '\\n');
-  $data = preg_replace($search_array,  $replace_array, $data);
-  $data = ltrim(rtrim($data, '"'), '"');
-  $data = $isevaled ? $data : ($data[0] === "'") ? $data : "'" . $data . "'";
-
-$js = <<<JSCODE
-\n<script>
-     // fallback - to deal with IE (or browsers that don't have console)
-     if (! window.console) console = {};
-     console.log = console.log || function(name, data){};
-     // end of fallback
-
-     console.log('$name');
-     console.log('------------------------------------------');
-     console.log('$type');
-     console.log($data);
-     console.log('\\n');
-</script>
-JSCODE;
-
-          echo $js;
-     } # end logConsole
+}
 ?>

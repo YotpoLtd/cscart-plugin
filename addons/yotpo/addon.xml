@@ -7,6 +7,7 @@
   <description>Yotpo descritpion</description>
   <priority>100500</priority>
   <default_language>EN</default_language>
+  <status>active</status>
   <language_variables>
 	<item lang="EN" id="block_widget">Yotpo widget</item>
 	<item lang="EN" id="block_widget_description">Add Yotpo widget</item>
@@ -61,7 +62,17 @@
 					<default_value>Y</default_value>
 				</item>
 			</items>
-		</section> 		
+		</section> 	
+		<section id="costumize">
+			<name>Costumize</name>
+			<items>
+				<item id="yotpo_links">
+					<name>Costumize your account</name>
+					<type>info</type>
+					<handler>fn_yotpo_login_link</handler>
+				</item>
+			</items>
+		</section> 	
 	</sections>
 	</settings>
 </addon>
