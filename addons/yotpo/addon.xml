@@ -9,8 +9,8 @@
   <default_language>EN</default_language>
   <status>active</status>
   <language_variables>
-	<item lang="EN" id="block_widget">Yotpo widget</item>
-	<item lang="EN" id="block_widget_description">Add Yotpo widget</item>
+	<item lang="EN" id="block_yotpo_description">Add Yotpo widget</item>
+	<item lang="EN" id="block_yotpo">Yotpo widget</item>
   </language_variables>
 
   	<settings layout="separate">
