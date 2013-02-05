@@ -118,7 +118,7 @@ function fn_validate_sign_up_form($userName, $mail, $password, $passwordConfirm)
   return NULL;
 }
 
-function fn_yotpo_sign_up($userName, $mail, $password, $appKeyObjectId, $secretKeyObjectId)
+function fn_yotpo_sign_up($userName, $mail, $password)
 {
   $is_mail_valid = json_decode(fn_check_mail_availability($mail), true);     
      
@@ -130,8 +130,9 @@ function fn_yotpo_sign_up($userName, $mail, $password, $appKeyObjectId, $secretK
       $accountPlatformResponse = json_decode(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], Registry::get('config.current_location')), true);        
       if($accountPlatformResponse['status']['code'] == 200)
       {
-        CSettings::instance()->update_value_by_id($appKeyObjectId, $response['response']['app_key']);
-        CSettings::instance()->update_value_by_id($secretKeyObjectId, $response['response']['secret']);
+        $cSettings = CSettings::instance();
+        $cSettings->update_value('yotpo_app_key', $response['response']['app_key'], 'yotpo');
+        $cSettings->update_value('yotpo_secret_token', $response['response']['secret'], 'yotpo');
         return NULL;  
       }
       else
