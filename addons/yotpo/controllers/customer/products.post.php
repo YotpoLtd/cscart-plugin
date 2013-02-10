@@ -19,6 +19,7 @@ if ($mode == 'view' && !empty($_REQUEST['product_id']) && Registry::is_exist('ad
 	$view->assign('yotpoProductImageUrl', fn_get_product_image_url($product['product_id']));
 	$view->assign('yotpoProductUrl', fn_get_product_url($product['product_id']));
 	$view->assign('yotpoLanguage', CART_LANGUAGE);
+	$view->assign('yotpoLanguage', Registry::get('addons.yotpo.yotpo_widget_language'));
 }
 
 

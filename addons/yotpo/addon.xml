@@ -46,6 +46,46 @@
 		<section id="settings">
 			<name>Settings</name>
 			<items>
+				<item id="yotpo_widget_language">
+					<name>Select widget language</name>
+					<type>selectbox</type>
+					<default_value>en</default_value>
+					<variants>
+						<item id="en">
+							<name>English</name>
+						</item>
+						<item id="de">
+							<name>German</name>
+						</item>
+						<item id="fr">
+							<name>French</name>
+						</item>
+						<item id="he">
+							<name>Hebrew</name>
+						</item>
+						<item id="hr">
+							<name>Croatian</name>
+						</item>
+						<item id="it">
+							<name>Italian</name>
+						</item>
+						<item id="ja">
+							<name>Japanese</name>
+						</item>
+						<item id="nl">
+							<name>Dutch</name>
+						</item>
+						<item id="pt">
+							<name>Portuguese</name>
+						</item>
+						<item id="sv">
+							<name>Swedish</name>
+						</item>
+						<item id="vi">
+							<name>Vietnamese</name>
+						</item>
+					</variants>
+				</item>
 				<item id="yotpo_app_key">
 					<name>App key</name>
 					<type>input</type>
