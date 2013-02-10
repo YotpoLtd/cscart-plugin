@@ -94,7 +94,7 @@ function fn_get_product_image_url($product_id)
 {
   $image_pair = fn_get_image_pairs($product_id, 'product', 'M', true, true, CART_LANGUAGE);
   $valid_image_path = fn_find_valid_image_path($image_pair, 'product');
-  return !empty($valid_image_path) ? 'http://' . Registry::get('config.http_host') . $valid_image_path : 'http://' . Registry::get('config.http_location') . '/images/no_image.gif';
+  return !empty($valid_image_path) ? 'http://' . Registry::get('config.http_host') . $valid_image_path : NULL;
 }
 
 function fn_get_product_url($product_id)
@@ -124,10 +124,10 @@ function fn_yotpo_sign_up($userName, $mail, $password)
      
   if($is_mail_valid['status']['code'] == 200 && $is_mail_valid['response']['available'] == true)
   {  
-    $response = json_decode(fn_yotpo_register($mail, $userName, $password, Registry::get('config.current_location')), true);
+    $response = json_decode(fn_yotpo_register($mail, $userName, $password, 'http://' . Registry::get('config.http_host')), true);
     if($response['status']['code'] == 200)
     {
-      $accountPlatformResponse = json_decode(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], Registry::get('config.current_location')), true);        
+      $accountPlatformResponse = json_decode(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], 'http://' . Registry::get('config.http_host')), true);        
       if($accountPlatformResponse['status']['code'] == 200)
       {
         $cSettings = CSettings::instance();
@@ -173,6 +173,7 @@ function fn_yotpo_register($email, $name, $password, $url)
   $user["password"] = $password;
   $user['url'] = $url;
   $data['user'] = $user;
+  $data['install_step'] = 'done';
   list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/users.json', $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
   return $result;
 }
@@ -185,7 +186,7 @@ function fn_yotpo_create_account_platform($app_key, $secret_token, $shop_url)
       $data = array();
       $data['utoken'] = $token;
       $platform_type = array();
-      $platform_type['platform_type_id'] = 9;
+      $platform_type['platform_type_id'] = YOTPO_PLATFORM_ID;
       $platform_type['shop_domain'] = $shop_url;
       $data['account_platform'] = $platform_type;
       list (, $result) =  fn_http_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', $data, NULL, NULL, YOTPO_HTTP_REQUEST_TIMEOUT);
@@ -204,7 +205,7 @@ function fn_yotpo_login_link()
   }
   else
   {
-    $signUpHref = "<a class='y-href' href='https://api.yotpo.com/users/sign_in' target='_blank'>sign up</a>";
+    $signUpHref = "<a class='y-href' href='https://www.yotpo.com/register' target='_blank'>sign up</a>";
     $result = "<p> You have to " .$signUpHref. " first in order to be able to costumize Yotpo widget.</p>";
     return $result;
   }

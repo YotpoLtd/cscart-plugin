@@ -2,7 +2,7 @@
 
   <div class="yotpo reviews" 
   	   data-appkey="{$yotpoAppkey}"
-  	   data-domain="{$config.current_location}"
+  	   data-domain="http://{$config.http_host}"
   	   data-product-id="{$product.product_id}"
   	   data-product-models="{$product.product_code}"
   	   data-name="{$product.product}" 
