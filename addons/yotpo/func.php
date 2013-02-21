@@ -93,7 +93,7 @@ function fn_grant_oauth_access($app_key, $secret_token)
 function fn_get_product_image_url($product_id)
 {
   $image_pair = fn_get_image_pairs($product_id, 'product', 'M', true, true, CART_LANGUAGE);
-  $valid_image_path = fn_find_valid_image_path($image_pair, 'product');
+  $valid_image_path = fn_find_valid_image_path($image_pair, 'product',true, CART_LANGUAGE);
   return !empty($valid_image_path) ? 'http://' . Registry::get('config.http_host') . $valid_image_path : NULL;
 }
 
