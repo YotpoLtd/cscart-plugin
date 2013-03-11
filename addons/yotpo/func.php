@@ -9,8 +9,6 @@ function fn_yotpo_change_order_status($status_to, $status_from, $order_info, $fo
 {
   if (
       $status_to == "C" &&
-      Registry::is_exist('addons.yotpo.yotpo_mail_after_purchase') && 
-      Registry::get('addons.yotpo.yotpo_mail_after_purchase') == true && 
       Registry::is_exist('addons.yotpo.yotpo_app_key') && 
       Registry::get('addons.yotpo.yotpo_app_key') != '' && 
       Registry::is_exist('addons.yotpo.yotpo_secret_token') && 

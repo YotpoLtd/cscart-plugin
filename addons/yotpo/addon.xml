@@ -96,11 +96,6 @@
 					<type>input</type>
 				</item>
 
-				<item id="yotpo_mail_after_purchase">
-					<name>Mail after purchase</name>
-					<type>checkbox</type>
-					<default_value>Y</default_value>
-				</item>
 				<item id="yotpo_get_past_orders">
 					<name/>
 					<type>template</type>
