@@ -259,4 +259,16 @@ function fn_yotpo_login_link()
     return $result;
   }
 }
+function fn_yotpo_get_past_orders_button()
+{
+
+	$cSettings = CSettings::instance();
+	if($cSettings->get_value('yotpo_is_past_order_sent', 'yotpo',CSettings::ADDON_SECTION) == 'false')
+	{
+		return '<span class="submit-button">
+					<input type="submit" name="dispatch[addons.past_orders]" value="Post past orders">
+				</span>';		
+	}
+
+}
 ?>

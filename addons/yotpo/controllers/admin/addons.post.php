@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_REQUEST['addon'] == 'yotpo')
 	{
 		if (!empty($appKey) && !empty($secret))
 		{
-			if($cSettings->get_value('yotpo_is_past_order_sent', 'yotpo',CSettings::ADDON_SECTION) == false)
+			if($cSettings->get_value('yotpo_is_past_order_sent', 'yotpo',CSettings::ADDON_SECTION) == 'false')
 			{
-				$cSettings->update_value('yotpo_is_past_order_sent', true, 'yotpo');
+				$cSettings->update_value('yotpo_is_past_order_sent', 'true', 'yotpo');
 					
 				$data = fn_yotpo_get_past_orders($auth);
 				$is_success = true;

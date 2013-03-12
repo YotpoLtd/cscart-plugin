@@ -98,8 +98,8 @@
 
 				<item id="yotpo_get_past_orders">
 					<name/>
-					<type>template</type>
-					<default_value>past_orders.tpl</default_value>
+                    <type>info</type>
+                    <handler>fn_yotpo_get_past_orders_button</handler>
 				</item>	
 				<item id="yotpo_is_past_order_sent">
 					<name/>
