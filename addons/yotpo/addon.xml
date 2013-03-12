@@ -2,7 +2,7 @@
  
 <addon scheme='2.0'>
   <id>yotpo</id>
-  <version>1.0.1</version> 
+  <version>1.0.2</version> 
   <name>Yotpo</name>
   <description>The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.</description>
   <priority>100500</priority>
@@ -96,11 +96,16 @@
 					<type>input</type>
 				</item>
 
-				<item id="yotpo_mail_after_purchase">
-					<name>Mail after purchase</name>
-					<type>checkbox</type>
-					<default_value>Y</default_value>
-				</item>
+				<item id="yotpo_get_past_orders">
+					<name/>
+                    <type>info</type>
+                    <handler>fn_yotpo_get_past_orders_button</handler>
+				</item>	
+				<item id="yotpo_is_past_order_sent">
+					<name/>
+					<type>hidden</type>
+					<default_value>false</default_value>
+				</item>									
 			</items>
 		</section> 	
 		<section id="costumize">
