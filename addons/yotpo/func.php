@@ -24,7 +24,7 @@ function fn_yotpo_change_order_status($status_to, $status_from, $order_info, $fo
     {
       $singleMapData['platform'] = 'cscart';
       $singleMapData['utoken'] = $token;
-      fn_https_request('POST', YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", json_encode($singleMapData), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);   
+      fn_https_request('POST', YOTPO_API_URL . '/apps/' . $app_key . "/purchases/", fn_to_json($singleMapData), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);   
     }    
   
   }
@@ -80,7 +80,7 @@ function fn_grant_oauth_access($app_key, $secret_token)
     {
       $request = new YotpoOAuthRequester(YOTPO_OAUTH_TOKEN_URL, "POST", $yotpo_options);         
       $result = $request->doRequest(0);
-      $tokenParams = json_decode($result['body'], true);
+      $tokenParams = fn_from_json($result['body'], true);
 
       if(isset($tokenParams['access_token']))
         return $tokenParams['access_token'];
@@ -123,14 +123,14 @@ function fn_validate_sign_up_form($name, $email, $password, $passwordConfirm)
 
 function fn_yotpo_sign_up($userName, $mail, $password)
 {
-  $is_mail_valid = json_decode(fn_check_mail_availability($mail), true);     
+  $is_mail_valid = fn_from_json(fn_check_mail_availability($mail), true);     
      
   if($is_mail_valid['status']['code'] == 200 && $is_mail_valid['response']['available'] == true)
   {  
-    $response = json_decode(fn_yotpo_register($mail, $userName, $password, 'http://' . Registry::get('config.http_host')), true);
+    $response = fn_from_json(fn_yotpo_register($mail, $userName, $password, 'http://' . Registry::get('config.http_host')), true);
     if($response['status']['code'] == 200)
     {
-      $accountPlatformResponse = json_decode(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], 'http://' . Registry::get('config.http_host')), true);        
+      $accountPlatformResponse = fn_from_json(fn_yotpo_create_account_platform($response['response']['app_key'], $response['response']['secret'], 'http://' . Registry::get('config.http_host')), true);        
       if($accountPlatformResponse['status']['code'] == 200)
       {
         $cSettings = CSettings::instance();
@@ -162,7 +162,7 @@ function fn_check_mail_availability($email)
   $data['model'] = 'user';
   $data['field'] = 'email';
   $data['value'] = $email;
-  list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/apps/check_availability', json_encode($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);  
+  list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/apps/check_availability', fn_to_json($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);  
   return $result;
 } 
 
@@ -177,7 +177,7 @@ function fn_yotpo_register($email, $name, $password, $url)
   $user['url'] = $url;
   $data['user'] = $user;
   $data['install_step'] = 'done';
-  list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/users.json', json_encode($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
+  list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/users.json', fn_to_json($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
   return $result;
 }
 
@@ -192,7 +192,7 @@ function fn_yotpo_create_account_platform($app_key, $secret_token, $shop_url)
       $platform_type['platform_type_id'] = YOTPO_PLATFORM_ID;
       $platform_type['shop_domain'] = $shop_url;
       $data['account_platform'] = $platform_type;
-      list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', json_encode($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
+      list (, $result) =  fn_https_request('POST', YOTPO_API_URL . '/apps/' . $app_key .'/account_platform', fn_to_json($data), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
       return $result;
     }
     return $token;
@@ -201,11 +201,11 @@ function fn_yotpo_create_account_platform($app_key, $secret_token, $shop_url)
 function fn_yotpo_get_past_orders($auth)
 {
   $from = strtotime("now");
-  $to = strtotime('-' . PAST_ORDER_DAYS_LIMIT . ' days');
+  $to = strtotime('-' . YOTPO_PAST_ORDER_DAYS_LIMIT . ' days');
   $fields = array('order_id', 'firstname', 'lastname', 'email', 'timestamp');
 
   $condition = "?:orders.timestamp BETWEEN $to AND $from AND ?:orders.status = 'c'";
-  $limit = 'LIMIT 0, ' . PAST_ORDER_LIMIT;  
+  $limit = 'LIMIT 0, ' . YOTPO_PAST_ORDER_LIMIT;  
   
   $orders_db_data = db_get_array('SELECT ' . implode(', ', $fields) . " FROM ?:orders WHERE $condition $limit");
   
@@ -233,7 +233,7 @@ function fn_yotpo_get_past_orders($auth)
     $ordars_map_data[] = fn_get_single_map_data($single_order ,$auth);
   }
   
-  $post_bulk_orders = array_chunk($ordars_map_data, BULK_SIZE);
+  $post_bulk_orders = array_chunk($ordars_map_data, YOTPO_BULK_SIZE);
   $data = array();
   foreach ($post_bulk_orders as $index=>$bulk)
   {

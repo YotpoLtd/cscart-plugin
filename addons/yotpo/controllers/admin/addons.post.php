@@ -45,23 +45,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_REQUEST['addon'] == 'yotpo')
 				$data = fn_yotpo_get_past_orders($auth);
 				$is_success = true;
 				$message = '';
-				foreach ($data as $post_bulk)
+				$token = fn_grant_oauth_access($appKey, $secret);
+				if(isset($token))
 				{
-					if(!is_null($post_bulk))
+					foreach ($data as $post_bulk)
 					{
-						$token = fn_grant_oauth_access($appKey, $secret);
-						if(isset($token))
+						if(!is_null($post_bulk))
 						{
-							$post_bulk['utoken'] = $token;
-							list (, $result) = fn_https_request('POST', YOTPO_API_URL . '/apps/' . $appKey . "/purchases/mass_create", json_encode($post_bulk), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
-							$result = json_decode($result , true);
-							if ($result['code'] != 200 && $is_success)
+							if(isset($token))
 							{
-								$message = $result['message'];
-								$is_success = false;
+								$post_bulk['utoken'] = $token;
+								list (, $result) = fn_https_request('POST', YOTPO_API_URL . '/apps/' . $appKey . "/purchases/mass_create", json_encode($post_bulk), null, null, 'application/json', null, null, null, null, null, YOTPO_HTTP_REQUEST_TIMEOUT);
+								$result = fn_from_json($result , true);
+								if ($result['code'] != 200 && $is_success)
+								{
+									$message = $result['message'];
+									$is_success = false;
+								}
 							}
 						}
 					}
+				}
+				else 
+				{
+					$is_success = false;
+					$message = 'The server could not authorize your account, check your API key, and secret';
 				}
 				if($is_success)
 				{
