@@ -69,16 +69,16 @@ function fn_get_single_map_data($order_info, $auth = null)
 
 function fn_grant_oauth_access($app_key, $secret_token)
 {
-    $OAuthStorePath = dirname(__FILE__) . '/lib/oauth-php/library/OAuthStore.php';
-    $OAuthRequesterPath = dirname(__FILE__) . '/lib/oauth-php/library/OAuthRequester.php';
+    $OAuthStorePath = dirname(__FILE__) . '/lib/oauth-php/library/YotpoOAuthStore.php';
+    $OAuthRequesterPath = dirname(__FILE__) . '/lib/oauth-php/library/YotpoOAuthRequester.php';
 
     require_once ($OAuthStorePath);
     require_once ($OAuthRequesterPath);
     $yotpo_options = array( 'consumer_key' => $app_key, 'consumer_secret' => $secret_token, 'client_id' => $app_key, 'client_secret' => $secret_token, 'grant_type' => 'client_credentials' );
-    OAuthStore::instance("2Leg", $yotpo_options);
+    YotpoOAuthStore::instance("2Leg", $yotpo_options);
     try
     {
-      $request = new OAuthRequester(YOTPO_OAUTH_TOKEN_URL, "POST", $yotpo_options);         
+      $request = new YotpoOAuthRequester(YOTPO_OAUTH_TOKEN_URL, "POST", $yotpo_options);         
       $result = $request->doRequest(0);
       $tokenParams = json_decode($result['body'], true);
 
@@ -87,7 +87,7 @@ function fn_grant_oauth_access($app_key, $secret_token)
       else
         return NULL;
   }
-  catch(OAuthException2 $e)
+  catch(YotpoOAuthException2 $e)
   {//Do nothing
     return NULL;
   }
