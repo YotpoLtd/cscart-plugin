@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+ 
+<addon>
+  <id>yotpo</id>
+  <version>1.0.2</version> 
+  <name>Yotpo</name>
+  <description>The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.</description>
+  <priority>100500</priority>
+  <default_language>EN</default_language>
+  <status>active</status>
+  <language_variables>
+	<item lang="EN" id="block_yotpo_description">Product review widget</item>
+	<item lang="EN" id="block_yotpo">Yotpo widget</item>
+  </language_variables>
+
+  	<opt_settings>
+		<section id="signup" name="Signup">
+			<item id="yotpo_signup_header">
+				<name>Create your Yotpo account</name>
+				<type>header</type>
+			</item>
+			<item id="yotpo_user_email">
+				<name>Email address</name>
+				<type>input</type>
+			</item>
+
+			<item id="yotpo_user_name">
+				<name>Name</name>
+				<type>input</type>
+			</item>
+
+			<item id="yotpo_user_password">
+				<name>Password</name>
+				<type>password</type>
+			</item>
+
+			<item id="yotpo_user_confirm_password">
+				<name>Confirm password</name>
+				<type>password</type>
+			</item>
+		</section>
+		<section id="settings" name="Settings">
+			<item id="yotpo_widget_language">
+				<name>Select widget language</name>
+				<type>selectbox</type>
+				<default_value>en</default_value>
+				<variants>
+					<item id="en">
+						<name>English</name>
+					</item>
+					<item id="de">
+						<name>German</name>
+					</item>
+					<item id="fr">
+						<name>French</name>
+					</item>
+					<item id="he">
+						<name>Hebrew</name>
+					</item>
+					<item id="hr">
+						<name>Croatian</name>
+					</item>
+					<item id="it">
+						<name>Italian</name>
+					</item>
+					<item id="ja">
+						<name>Japanese</name>
+					</item>
+					<item id="nl">
+						<name>Dutch</name>
+					</item>
+					<item id="pt">
+						<name>Portuguese</name>
+					</item>
+					<item id="sv">
+						<name>Swedish</name>
+					</item>
+					<item id="vi">
+						<name>Vietnamese</name>
+					</item>
+				</variants>
+			</item>
+			<item id="yotpo_app_key">
+				<name>App key</name>
+				<type>input</type>
+			</item>
+
+			<item id="yotpo_secret_token">
+				<name>Secret token</name>
+				<type>input</type>
+			</item>
+
+			<item id="yotpo_get_past_orders">
+				<name/>
+                   <type>info</type>
+                   <handler>fn_yotpo_get_past_orders_button</handler>
+			</item>									
+		</section> 	
+		<section id="costumize" name="Costumize">
+			<item id="yotpo_links">
+				<name>Costumize your account</name>
+				<type>info</type>
+				<handler>fn_yotpo_login_link</handler>
+			</item>
+		</section> 	
+	</opt_settings>
+	<opt_queries>
+	<item>CREATE TABLE ?:addon_yotpo (
+                         `_id` int(11) NOT NULL,
+                         `is_sent_past_order` TINYINT(1) default 1,                                   
+                         PRIMARY KEY  (`_id`)
+                       ) ENGINE=MyISAM DEFAULT CHARSET=utf8</item> 
+	<item for="uninstall">DROP TABLE IF EXISTS ?:addon_yotpo</item> 
+	</opt_queries>	
+</addon>
