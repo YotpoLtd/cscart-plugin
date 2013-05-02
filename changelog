@@ -4,3 +4,10 @@ Alon Braitstein
 ----------------
 1. Bug fix, add 2 missing parameters to function to prevent warnnings.
  
+Alon Braitstein 
+
+02-05-2013
+----------------
+1. Add conversions api call in order confirmation page. currently only in 3.x versions.
+ 
+  
