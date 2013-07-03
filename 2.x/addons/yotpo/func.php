@@ -277,7 +277,7 @@ function fn_yotpo_login_link()
   else
   {
     $signUpHref = "<a class='y-href' href='https://www.yotpo.com/register' target='_blank'>sign up</a>";
-    $result = "<p> You have to " .$signUpHref. " first in order to be able to costumize Yotpo widget.</p>";
+    $result = "<p> You have to " .$signUpHref. " first in order to be able to customize Yotpo widget.</p>";
     return $result;
   }
 }
