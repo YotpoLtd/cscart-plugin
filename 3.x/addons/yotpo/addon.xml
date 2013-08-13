@@ -2,7 +2,7 @@
  
 <addon scheme='2.0'>
   <id>yotpo</id>
-  <version>1.0.4</version> 
+  <version>1.0.5</version> 
   <name>Yotpo</name>
   <description>The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.</description>
   <priority>100500</priority>
@@ -47,44 +47,13 @@
 			<name>Settings</name>
 			<items>
 				<item id="yotpo_widget_language">
-					<name>Select widget language</name>
-					<type>selectbox</type>
-					<default_value>en</default_value>
-					<variants>
-						<item id="en">
-							<name>English</name>
-						</item>
-						<item id="de">
-							<name>German</name>
-						</item>
-						<item id="fr">
-							<name>French</name>
-						</item>
-						<item id="he">
-							<name>Hebrew</name>
-						</item>
-						<item id="hr">
-							<name>Croatian</name>
-						</item>
-						<item id="it">
-							<name>Italian</name>
-						</item>
-						<item id="ja">
-							<name>Japanese</name>
-						</item>
-						<item id="nl">
-							<name>Dutch</name>
-						</item>
-						<item id="pt">
-							<name>Portuguese</name>
-						</item>
-						<item id="sv">
-							<name>Swedish</name>
-						</item>
-						<item id="vi">
-							<name>Vietnamese</name>
-						</item>
-					</variants>
+					<name>Enter language code:</name>
+                    <type>input</type>
+                    <default_value>en</default_value>
+				</item>
+				<item id="yotpo_widget_language_link">
+                    <type>info</type>
+                    <handler>fn_yotpo_select_language_link</handler>
 				</item>
 				<item id="yotpo_app_key">
 					<name>App key</name>
