@@ -100,7 +100,7 @@ function fn_grant_oauth_access($app_key, $secret_token)
 function fn_get_product_image_url($product_id)
 {
   $image_pair = fn_get_image_pairs($product_id, 'product', 'M', true, true, CART_LANGUAGE);
-  return !empty($image_path['image_path']) ? $image_path['image_path'] : NULL;
+  return !empty($image_pair['detailed']['image_path']) ? $image_pair['detailed']['image_path'] : NULL;
 }
 
 function fn_get_product_url($product_id)

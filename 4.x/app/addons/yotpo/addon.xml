@@ -2,7 +2,7 @@
  
 <addon scheme='2.0'>
   <id>yotpo</id>
-  <version>1.0.5</version> 
+  <version>2.0.0</version> 
   <name>Yotpo</name>
   <description>The #1 reviews add-on for SMBs. Generate beautiful, trusted reviews for your shop.</description>
   <priority>100500</priority>
