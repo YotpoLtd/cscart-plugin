@@ -250,7 +250,7 @@ function fn_yotpo_login_link()
   $secret = Registry::get('addons.yotpo.yotpo_secret_token'); 
   if(!empty($appKey) && !empty($secret) && $appKey != '' && $secret != '')
   {
-    return "<a class='y-href' href='https://api.yotpo.com/users/b2blogin?app_key=" . $appKey ."&secret=" . $secret . "'  target='_blank'>Yotpo Dashboard.</a></div>";
+    return "Go to the <a class='y-href' href='https://api.yotpo.com/users/b2blogin?app_key=" . $appKey ."&secret=" . $secret . "'  target='_blank'>Yotpo Admin</a> to customize the look and feel of the widget and to edit your Mail After Purchase settings.</div>";
   }
   else
   {
