@@ -273,6 +273,6 @@ function fn_yotpo_get_past_orders_button()
 }
 
 function fn_yotpo_select_language_link() {
-  return 'You can find the supported langauge codes <a href="http://support.yotpo.com/entries/21861473-Languages-Customization-" target="_blank">here</a></br>';  
+  return 'You can find the supported language codes <a href="http://support.yotpo.com/entries/21861473-Languages-Customization-" target="_blank">here</a></br>';  
 }
 ?>
