@@ -106,9 +106,12 @@ function fn_get_product_image_url($product_id)
 function fn_get_product_url($product_id)
 {
   $product_url = fn_url('index.php?dispatch=products.view&product_id=' . $product_id, 'C', 'http', '&', CART_LANGUAGE, '', true);
-
+  
   try {
-    $product_url = fn_url('products.view?product_id=' . $product_id, 'C', 'http', CART_LANGUAGE);
+    $url = fn_url('products.view?product_id=' . $product_id, 'C', 'http', CART_LANGUAGE);
+    if (!empty($url)) {
+      $product_url = $url;
+    }    
   } catch (Exception $e) {
   }
 
