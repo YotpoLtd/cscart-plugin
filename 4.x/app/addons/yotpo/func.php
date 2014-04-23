@@ -105,12 +105,14 @@ function fn_get_product_image_url($product_id)
 
 function fn_get_product_url($product_id)
 {
+  $product_url = fn_url('index.php?dispatch=products.view&product_id=' . $product_id, 'C', 'http', '&', CART_LANGUAGE, '', true);
+
   try {
-    return fn_url('products.view?product_id=' . $product_id, 'C', 'http', CART_LANGUAGE);
+    $product_url = fn_url('products.view?product_id=' . $product_id, 'C', 'http', CART_LANGUAGE);
   } catch (Exception $e) {
   }
 
-  return fn_url('index.php?dispatch=products.view&product_id=' . $product_id, 'C', 'http', '&', CART_LANGUAGE, '', true);
+  return $product_url;
 }
 
 function fn_validate_sign_up_form($name, $email, $password, $passwordConfirm)
