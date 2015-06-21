@@ -1,7 +1,9 @@
 <script type="text/javascript">
 	(function() {$ldelim}
-		var yotpo = document.createElement("script");
-		yotpo.src = ("https:" == document.location.protocol ? "https://" : "http://") + "www.yotpo.com/js/yQuery.js";
-		document.documentElement.firstChild.appendChild(yotpo);
+  var e=document.createElement("script");
+  e.type="text/javascript";
+  e.async=true;
+  e.src="//staticw2.yotpo.com/{$yotpoAppkey}/widget.js";
+  var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);
 	{$rdelim})();
 </script>
